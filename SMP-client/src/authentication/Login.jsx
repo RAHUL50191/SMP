@@ -15,9 +15,7 @@ const Login = ({toggle,setToggle,progress,setProgress}) => {
   const dispatch=useDispatch();
   const navigate=useNavigate();
  
-  const { jwt, loading, error } = useSelector(state => state.auth);
-  // const [progress, setProgress] = useState(0);
-
+  const { jwt, loading, error,user } = useSelector(state => state.auth);
 
 
   // Start progress bar when loading is true
@@ -63,33 +61,27 @@ const Login = ({toggle,setToggle,progress,setProgress}) => {
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
-    // Handle form submission logic here
-    console.log(values);
-    dispatch(loginUserAction({data:values})).then(()=>{setSubmitting(false);
-      if(jwt)
-      setTimeout(() => {
-        navigate('/home');
-      }, 100);
-      if(error){
-        console.error(error.payload)
-  handleErr();
-      }
-
-    })
-    
-  };
-  useEffect(()=>{
-    console.log(jwt,localStorage.getItem("jwt"));
-  },[])
-
+    try { 
+        dispatch(loginUserAction({ data: values }));
+        // const {jwt,user}={jwt:JSON.parse(localStorage.getItem('jwt')),user:JSON.parse(localStorage.getItem('user'))}
+        if (jwt) {
+            navigate('/home');
+        }
+    } catch (err) { 
+        console.error(err);
+        handleErr();
+    } finally {
+        setSubmitting(false);
+    }
+};
+//error handling
  const [openErr,setOpenErr]=useState(false);
 
   function handleErr(){
-    
-      setOpenErr(true);
-   setTimeout(() => {
-    setOpenErr(false); }, 30000);
+    setOpenErr(true);
+    setTimeout(() => { setOpenErr(false); }, 30000);
   }
+  //style
   const theme = createTheme({
     palette: {
       background: {

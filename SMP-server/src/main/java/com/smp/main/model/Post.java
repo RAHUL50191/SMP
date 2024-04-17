@@ -25,11 +25,10 @@ public class Post {
 	@Id
     private String id;
     private String title;
-    private Binary image;
+    private Binary image; 
     @DBRef
 	private User user;
-    private List<Long> likes;
-    @DBRef
-    private List<Comment> comments;
+    private List<Long> likes; 
+    private List<String> comments;
     private LocalDateTime date;
 }

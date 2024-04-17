@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,11 +47,11 @@ public class PostController{
 		return new ResponseEntity<>(post,HttpStatus.CREATED) ;
 	}
 	//get user by postid
-	@GetMapping("/user/{id}")
-	public ResponseEntity<User> getPostUser(@PathVariable("id") String postId) {
+	@GetMapping("/user/{postId}")
+	public ResponseEntity<User> getPostUser(@PathVariable("postId") String postId) {
 		Post post=postService.getPost(postId);
 		
-		return new ResponseEntity<>(post.getUser(),HttpStatus.OK);
+		return new ResponseEntity<>(userService.getUser(post.getUser().getId()),HttpStatus.OK);
 		}
 	//find post by user id
 	@GetMapping("/postsByUser")
@@ -61,7 +62,7 @@ public class PostController{
     	}
 		return postService.getAllPostsByUser(user.getId());
     }
-	@GetMapping("/postsByUsers/{id}")
+	@GetMapping("/postsByUsers")
 	public List<Post> getAllPostsByUserId(@RequestParam("id") Long id) {
 		User user=userService.getUser(id);
     	if(user==null) {
@@ -97,6 +98,16 @@ public class PostController{
 		List<Post> posts=postService.getAllPosts();
 		return ResponseEntity.ok(posts);
 	}
+	 //find all following's post
+		@GetMapping("/allByFollowing")
+		public ResponseEntity<Set<Post>> getAllPostsByFollowing(@RequestHeader("Authorization") String jwt){
+			User user=userService.getUserByToken(jwt);
+	    	if(user==null) {
+	    		throw new BadCredentialsException("invalid access token");
+	    	}
+			Set<Post> posts=postService.getAllPostsByFollowing(user.getFollowing());
+			return ResponseEntity.ok(posts);
+		}
 	 
  
 	//add post to db
@@ -141,6 +152,21 @@ public class PostController{
 		System.out.println(post.getLikes());
 		return  ResponseEntity.ok(post);
 	}
+	//save
+	   @PutMapping("/savePost")
+	    public ResponseEntity<User> savePost(@RequestHeader("Authorization") String jwt, @RequestParam String postId) {
+	    	User user=userService.getUserByToken(jwt);
+	        User u=postService.savePost(user , postId);
+	        return ResponseEntity.ok(u);
+	    }
+	 
+	    @PutMapping("/unsavePost")
+	    public ResponseEntity<User> unsavePost(@RequestHeader("Authorization") String jwt, @RequestParam String postId) {
+	    	User user=userService.getUserByToken(jwt);
+	    	if(user==null) {throw new UserNotExists("Failed Authentication:"+jwt);}
+	        User u=postService.unsavePost(user , postId);
+	        return ResponseEntity.ok(u);
+	    }
 	//delete
 	@DeleteMapping("/deletePost")
 	public String deletePost(@RequestParam("postId") String postID) {

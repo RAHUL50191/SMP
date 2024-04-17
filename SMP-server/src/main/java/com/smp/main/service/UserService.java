@@ -2,7 +2,9 @@ package com.smp.main.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -190,6 +192,23 @@ public class UserService {
 		 User user=userRepository.findByEmail(email);
 		 if(user==null)throw new UserNotExists("NO user with token:"+jwt);
 		return user;
+	}
+	public Set<User> getUserSuggests(User user,List<Long> following) {
+		Set<User> suggestedUsers = new HashSet<>();
+
+        for (Long userId : following) {
+            List<Long> userFollowing = getFollowing(userId);
+           
+            for (Long followingUserId : userFollowing) {
+                if (!following.contains(followingUserId) && user.getId()!=followingUserId) {
+                	//add not following user
+                    User suggestedUser = getUser(followingUserId);
+                    
+                    suggestedUsers.add(suggestedUser);
+                }
+            }
+        }
+        return suggestedUsers;
 	}
 	
 	

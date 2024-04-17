@@ -19,11 +19,9 @@ public class Reel {
 	private String id;
 	private String title;
 	private String vidObj;
-
 	@DBRef
 	private User user;
 	private List<Long> likes;
-	@DBRef
-	private List<Comment> comments;
+	private List<String> comments;
 	private LocalDateTime date;
 }

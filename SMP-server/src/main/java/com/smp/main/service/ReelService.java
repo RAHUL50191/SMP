@@ -27,7 +27,8 @@ import com.mongodb.client.gridfs.model.GridFSFile;
 import com.mongodb.DBObject; 
 import com.smp.main.exceptions.ReelNotExists;
 import com.smp.main.exceptions.UserNotExists;
-import com.smp.main.model.Comment; 
+import com.smp.main.model.Comment;
+import com.smp.main.model.Post;
 import com.smp.main.model.Reel;
 import com.smp.main.model.User;
 import com.smp.main.repository.ReelRepository;
@@ -65,15 +66,13 @@ public class ReelService {
 		r.setDate(LocalDateTime.now());
 		r.setTitle(title);
 		//find user if exists
-		User userx = userRepository.findById(userId).orElse(null);
-		if (userx == null) {
-			throw new UserNotExists("User not found with ID: " + userId);
-		}
+		User userx = userRepository.findById(userId).orElseThrow(()->new UserNotExists("User not found with ID: " + userId));
+		 
 		r.setUser(userx);
 		r.setVidObj(vid);
 		
 		List<Long> likes = new ArrayList<>();
-		List<Comment> comments = new ArrayList<>(); 
+		List<String> comments = new ArrayList<>(); 
 		r.setLikes(likes);
 		r.setComments(comments);
 		r.setDate(LocalDateTime.now());
@@ -96,15 +95,15 @@ public class ReelService {
 	
 	//get all post by user
     public List<Reel> getAllReelsByUserId(Long userId) {
-    	System.out.println(userId);
-        return reelRepository.findByUserId(userId);
+//    	System.out.println(userId);
+        return reelRepository.findByUser(userId);
     }
     
     public List<Reel> getAllReelsByUser(Long userId) {
-    	System.out.println(userId);
-    	User user=userRepository.findById(userId).orElseThrow(()->new UserNotExists("User not found"+userId));
+//    	System.out.println(userId);
+    	userRepository.findById(userId).orElseThrow(()->new UserNotExists("User not found"+userId));
     	
-        List<Reel> p=reelRepository.findByUser(user);
+        List<Reel> p=reelRepository.findByUser(userId);
         return  p;
     }
 	public List<Reel> getAllReels() {
@@ -143,14 +142,16 @@ public class ReelService {
 			
 		}
 	//delete post
-	public String deleteReel(String postID) {
-			Reel post=reelRepository.findById(postID).orElse(null);
-			if(post!=null) {
-				reelRepository.deleteById(postID);
+	public String deleteReel(String reelID, Long userId) {
+			Reel reel=reelRepository.findById(reelID).orElse(null);
+			User user=userRepository.findById(userId).orElse(null);
+			
+			if(reel!=null && user!=null && userId==user.getId()) {
+				reelRepository.deleteById(reelID);
 				return "Successfully deleted";
 			}
 			else {
-				throw new ReelNotExists("post not found");
+				throw new ReelNotExists("post not found with this user");
 			}
 			
 		}
@@ -177,6 +178,27 @@ public class ReelService {
 	        throw new ReelNotExists(vidObjId);
 	    }
 	}
+	 
+	public User saveReel(User user, String reelId) { 
+		 if (!user.getSaved().contains(reelId)) {
+		        user.getSaved().add(reelId); // Adding postId to the list of saved posts
+		    
+		   
+		   } return userRepository.save(user);
+	}
+	public User unsaveReel(User user, String reelId) {
+		 if (user.getSaved().contains(reelId)) {
+		        user.getSaved().remove(reelId); // Adding postId to the list of saved posts
+		    
+		   
+		    }return userRepository.save(user);
+		
+	}
+//	public List<Reel> getAllReelsByUser(Long userId) {
+////		System.out.println(userId);
+//        return reelRepository.findByUserId(userId);
+//		 
+//	}
 
     
 }

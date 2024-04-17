@@ -51,13 +51,10 @@
 // export default SideBar
 
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { styled, useTheme } from '@mui/material/styles'; 
 import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
+import MuiAppBar from '@mui/material/AppBar'; 
+import List from '@mui/material/List'; 
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -67,21 +64,16 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import ListItemText from '@mui/material/ListItemText'; 
 import HomeIcon from '@mui/icons-material/Home';
 import ExploreIcon from '@mui/icons-material/Explore';
-import ReelIcon from '@mui/icons-material/Movie';
-import ChatIcon from '@mui/icons-material/Chat';
+import ReelIcon from '@mui/icons-material/Movie'; 
 import ProfileIcon from '@mui/icons-material/AccountCircle';
-import { Link } from 'react-router-dom';
-// import HomeIcon from '@mui/icons-material/Home';
-// import ExploreIcon from '@mui/icons-material/Explore';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Link } from 'react-router-dom'; 
 import MessageIcon from '@mui/icons-material/Message';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction'; 
+
 
 const drawerWidth = 240;
 
@@ -91,7 +83,8 @@ const openedMixin = (theme) => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
+  // overflowX: 'hidden',
+  zIndex: 9999,
 });
 
 const closedMixin = (theme) => ({
@@ -152,25 +145,82 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function SideBar() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
   const handleDrawerClose = () => {
+   
     setOpen(false);
+  }; 
+  React.useEffect(() => {
+    const handleResize = () => {
+      setOpen(window.innerWidth > 1260);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+
+  React.useEffect(() => {
+      const handleResize = () => {
+          setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+          window.removeEventListener('resize', handleResize);
+      };
+  }, []);
+
+  const [value, setValue] = React.useState('recents');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
-  return (<Drawer variant="permanent" open={open}>
+  return ( <>  {windowWidth<540?(<BottomNavigation sx={{width:"100%",position:'fixed',bottom:0,left:0 ,zIndex:9999}} value={value} onChange={handleChange}>
+    <Link to='/home'>
+    <BottomNavigationAction
+      label="Home"
+      value="home"
+      icon={<HomeIcon />}
+    /></Link>
+      <Link to='/home/explore'>
+    <BottomNavigationAction
+      label="Explore"
+      value="explore"
+      icon={<ExploreIcon  />}
+    /></Link>
+      <Link to='/home/reel'>
+    <BottomNavigationAction
+      label="Reel"
+      value="reel"
+      icon={<ReelIcon />}
+    /></Link>
+      <Link to='/home/message'>
+    <BottomNavigationAction label="Message" value="message" icon={<MessageIcon />} /></Link>
+    <Link to='/home/profile'>
+    <BottomNavigationAction label="Profile" value="profile" icon={<ProfileIcon />} /></Link>
+  </BottomNavigation>):(
+  
+  <Drawer variant="permanent" open={open} >
         <DrawerHeader>
         
-          {open?<><Typography
+          {open ?<><Typography
             variant="h4"
             component="div"
             sx={{
-              fontFamily: 'Bebas Neue, sans-serif', // Apply Bebas Neue font family
-              
+              fontFamily: 'Bebas Neue, sans-serif', 
+              p:3,
               fontWeight: 'bold',
               width: '100%',
               fontSize: '2rem',
@@ -222,7 +272,7 @@ export default function SideBar() {
             </ListItemButton></Link>
           </ListItem>
           <ListItem key="Explore" disablePadding sx={{ display: 'block' }}>
-            <Link to="/home/posts"><ListItemButton
+            <Link to="/home/explore"><ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
@@ -238,7 +288,7 @@ export default function SideBar() {
               >
                 <ExploreIcon /> 
               </ListItemIcon>
-              <ListItemText primary="Post" sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary="Explore" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton></Link>
           </ListItem>
           
@@ -264,7 +314,7 @@ export default function SideBar() {
           </ListItem>
  
           <ListItem key="Messages" disablePadding sx={{ display: 'block' }}>
-            <Link to="/home/messages"><ListItemButton
+            <Link to="/home/message"><ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
@@ -284,7 +334,7 @@ export default function SideBar() {
             </ListItemButton></Link>
           </ListItem> 
           <ListItem key="Profile" disablePadding sx={{ display: 'block' }}>
-            <Link to="/home/profile/3"><ListItemButton
+            <Link to="/home/profile"><ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
@@ -306,7 +356,7 @@ export default function SideBar() {
         </List>
         <Divider />
         {/* Add another List section here if needed */}
-      </Drawer>
-      
+      </Drawer>)}
+      </> 
   );
 }

@@ -3,11 +3,14 @@ package com.smp.main.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;  
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,105 +28,103 @@ public class PostService {
 PostRepository postRepository;
 @Autowired
 UserRepository userRepository;
-	//add
+//add
 	public String addPost(String title, MultipartFile file, Long userId) throws IOException {
     
-    Post post = new Post();
-    post.setTitle(title);
-    post.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
-
-    //find user if exists
-    User user = userRepository.findById(userId).orElse(null);
-    if (user == null) {
-        throw new UserNotExists("User not found with ID: " + userId);
-    }
-
-    post.setUser(user);
-    List<Long> likes = new ArrayList<>();
-    List<Comment> comments = new ArrayList<>();
-//    List<String> comments = new ArrayList<>();
-    post.setLikes(likes);
-    post.setComments(comments);
-//    updatedUser.setSaved(saved);
-    post.setDate( LocalDateTime.now());
-
-    // Save the post
-    post = postRepository.insert(post);
-    return post.getId();
-}
-	//get
+	    Post post = new Post();
+	    post.setTitle(title);
+	    post.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+	
+	    //find user if exists
+	    User user=userRepository.findById(userId).orElseThrow(()->new UserNotExists("User not found with ID: " + userId));
+	    post.setUser(user);
+	    List<Long> likes = new ArrayList<>();
+	    List<String> comments = new ArrayList<>(); 
+	    post.setLikes(likes);
+	    post.setComments(comments); 
+	    post.setDate( LocalDateTime.now());
+	
+	    // Save the post
+	    post = postRepository.insert(post);
+	    return post.getId();
+	}
+//get
 	public Post getPost(String id) {
-		Post post =postRepository.findById(id).orElse(null);
-		if(post==null) {
-			throw new PostNotExists("No Post available with "+id+" id");
-		}
-		
-		User u=post.getUser();
-		if(u==null) {
-			throw new UserNotExists("User not found");
-		}
+		Post post =postRepository.findById(id).orElseThrow(()->new PostNotExists("No Post available with "+id+" id"));
+		userRepository.findById( post.getUser().getId()).orElseThrow(()-> new UserNotExists("User not found"));
+		 
 		return post;
 	}
  
-	//get all post by user
-    public List<Post> getAllPostsByUserId(Long userId) {
-    	System.out.println(userId);
-        return postRepository.findByUserId(userId);
+//get all post by user
+    public List<Post> getAllPostsByUserId(Long userId) { 
+        return postRepository.findByUser(userId);
     }
-    
-    public List<Post> getAllPostsByUser(Long userId) {
-    	System.out.println(userId);
-    	User user=userRepository.findById(userId).orElseThrow(()->new UserNotExists("User not found"+userId));
+    public List<Post> getAllPostsByUser(Long userId) { 
+
+    	userRepository.findById(userId).orElseThrow(()->new UserNotExists("User not found"+userId));
     	
-        List<Post> p=postRepository.findByUser(user);
+        List<Post> p=postRepository.findByUser(userId);
         return  p;
     }
+//post by follwing user	
+  	public Set<Post> getAllPostsByFollowing(List<Long> list) {
+  		Set<Post> posts =new HashSet<>();
+  		for(Long Id:list) {
+  			User user=userRepository.findById(Id).orElse(null);
+  			if(user==null)continue;
+  			List<Post> postByFollowing=getAllPostsByUserId(Id);
+  			 for(Post p:postByFollowing) {
+  				 posts.add(p);
+  			 }
+  		}
+  		return posts;
+  	}
+//all
 	public List<Post> getAllPosts() {
 		// TODO Auto-generated method stub
 		List<Post> posts=postRepository.findAll();
 		return posts;
 	}
-	//comment liked by users
+//like
 	public Post likePost(String postID,Long userID) {
-			Post post=postRepository.findById(postID).orElse(null);
- 
-			if(post!=null) {
-					if(!post.getLikes().contains(userID)) {
-					 post.getLikes().add(userID);
-					}
-					return postRepository.save(post);
-			}else {
-				throw new PostNotExists("post not found");
-			}
-			
-			
+		Post post=postRepository.findById(postID).orElseThrow(()->new PostNotExists("post not found"));	 
+		if(!post.getLikes().contains(userID)) {
+			post.getLikes().add(userID);
 		}
-	//post unliked by users
+		return postRepository.save(post);
+	} 
 	public Post unlikePost(String postID,Long userID) {
-			Post post=postRepository.findById(postID).orElse(null);
-	 
-			if(post!=null) {
-					if(post.getLikes().contains(userID)) {
-					 post.getLikes().remove(userID);
-					}
-					return postRepository.save(post);
-			}else {
-				throw new PostNotExists("post not found");
-			}
-			
-			
+		Post post=postRepository.findById(postID).orElseThrow(()->new PostNotExists("post not found"));	 
+ 
+		if(post.getLikes().contains(userID)) {
+		 post.getLikes().remove(userID);
 		}
+		return postRepository.save(post);
+		 			
+	}
+//save
+	public User savePost(User user, String postId) { 
+		 if (!user.getSaved().contains(postId)) {
+		        user.getSaved().add(postId); // Adding postId to the list of saved posts  
+		 }
+		 return userRepository.save(user);
+	}
+	public User unsavePost(User user, String postId) {
+		 if(user.getSaved().contains(postId)) {
+		        user.getSaved().remove(postId); // Adding postId to the list of saved posts
+		 }
+		 return userRepository.save(user);	
+	}
 	//delete post
 	public String deletePost(String postID) {
-			Post post=postRepository.findById(postID).orElse(null);
-			if(post!=null) {
-				postRepository.deleteById(postID);
-				return "Successfully deleted";
-			}
-			else {
-				throw new PostNotExists("post not found");
-			}
+		postRepository.findById(postID).orElseThrow(()->new PostNotExists("post not found")); 
+		postRepository.deleteById(postID);
+		return "Successfully deleted";
+		 
 			
 		}
+
+
 
 }

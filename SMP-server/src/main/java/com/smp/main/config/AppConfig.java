@@ -19,8 +19,8 @@ public class AppConfig {
 		
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/signin","/singup").permitAll()
-//                .anyRequest().authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
+//                .anyRequest().permitAll()
 				)
 			.addFilterBefore(new jwtValidator(), BasicAuthenticationFilter.class)
             .csrf(csrf -> csrf.disable());

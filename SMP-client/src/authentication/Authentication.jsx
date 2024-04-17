@@ -2,8 +2,7 @@ import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Login from "./Login";
 import Register from "./Register"; 
-import { useSelector } from 'react-redux'; 
-import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';  
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 const Authentication = () => {
@@ -16,25 +15,17 @@ const Authentication = () => {
   ];
   const [progress, setProgress] =useState(0);  
   const [index, setIndex] = useState(0);
-  const [toggle,setToggle]=useState(true);
-  const navigate = useNavigate();
+  const [toggle,setToggle]=useState(true); 
   const { jwt, loading, error } = useSelector(state => state.auth);
   //mobile imges
   useEffect(() => {
     const intervalId = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % src.length);
     }, 4000);
-
-    // Cleanup function to clear interval on component unmount
+ 
     return () => clearInterval(intervalId);
   }, []);
-  // useEffect(() => {
-  //   if (localStorage.getItem("jwt")) {
-  //     setTimeout(() => {
-  //       // navigate("/home");
-  //     }, 2000);
-  //   }
-  // });
+ 
 
   return (
     <div className='  '>

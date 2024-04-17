@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,6 +56,15 @@ public class UserController {
         }
         return ResponseEntity.ok(user);
     }
+    @GetMapping("/suggests")
+    public ResponseEntity<Set<User>> getUserSuggests(@RequestHeader("Authorization") String jwt) {
+    	User user=userService.getUserByToken(jwt);        
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Set<User> suggests=userService.getUserSuggests(user,user.getFollowing());
+        return ResponseEntity.ok(suggests);
+    }
 
     @PostMapping("/addUser")
     public ResponseEntity<User> addUser(@RequestBody User user) {
@@ -102,6 +112,7 @@ public class UserController {
         userService.unfollowUserById(user.getId(), unfollowUserId);
         return ResponseEntity.ok("User unfollowed successfully.");
     }
+ 
     
 //    @PutMapping("/{userName}/follow")
 //    public ResponseEntity<String> followUser(@PathVariable String userName, @RequestParam String followUserName) {

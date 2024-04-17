@@ -9,11 +9,11 @@ import com.smp.main.model.User;
 
 public interface PostRepository extends MongoRepository<Post, String>{
 
-	List<Post> findByUser_Id(Long id);
+//	List<Post> findByUser_Id(Long id);
 //	List<Post> findByEmailPosts(String email);
-	List<Post> findByUserId(Long userId);
-	List<Post> findByUserId(User user);
-	List<Post> findByUserEmail(String s);
-	List<Post> findByUser(User user);
+//	List<Post> findByUserId(Long userId);
+//	List<Post> findByUserId(Long user);
+//	List<Post> findByUserEmail(String s);
+	List<Post> findByUser(Long user);
 }
  

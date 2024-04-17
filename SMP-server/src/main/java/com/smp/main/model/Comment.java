@@ -24,11 +24,13 @@ public class Comment {
 	private Long userId;
 	private String postId;
 	private LocalDateTime createdAt;
+	private String userName;
 	
-	public Comment(String content, List<Long> likes, Long userId, String postId, LocalDateTime createdAt) {
+	public Comment(String content, List<Long> likes, Long userId, String postId,String userName, LocalDateTime createdAt) {
         this.content = content;
         this.likes = likes;
         this.userId = userId;
+        this.userName = userName;
         this.postId = postId;
         this.createdAt = createdAt;
     }

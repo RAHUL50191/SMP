@@ -6,6 +6,7 @@ const authSlice = createSlice({
     jwt: null,
     loading: false,
     error: null,
+    user: null,
   },
   reducers: {
     loginRequest(state) {
@@ -13,8 +14,8 @@ const authSlice = createSlice({
       state.error = null;
     },
     loginSuccess(state, action) {
-      state.jwt = action.payload;
-
+      state.jwt = action.payload.token;
+      state.user = action.payload.user;
       state.loading = false;
       state.error = null;
     },
@@ -37,9 +38,12 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    userData(state, action) {
+      state.user = action.payload;
+    },
   },
 });
 
-export const { loginRequest, loginSuccess, loginFail, registerRequest, registerSuccess, registerFail } = authSlice.actions;
+export const { loginRequest, loginSuccess, loginFail, registerRequest, registerSuccess, registerFail, userData } = authSlice.actions;
 
 export default authSlice.reducer;
