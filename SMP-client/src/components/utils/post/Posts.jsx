@@ -73,7 +73,7 @@ const PostFooter = ({postId,likes ,setCommentTab,commentTab }) => {
   const handleLike = async () => {
     try {
       const response = await axios.put(
-        `${SERVER_URL}/post/${like ? 'unlikeReel' : 'likeReel'}?postId=${postId}`,
+        `${SERVER_URL}/post/${like ? 'unlikePost' : 'likePost'}?postId=${postId}`,
         null,
         {
           headers: {
@@ -101,7 +101,7 @@ const PostFooter = ({postId,likes ,setCommentTab,commentTab }) => {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `${SERVER_URL}/post/${save ? 'unsaveReel' : 'saveReel'}?postId=${postId}`,
+        `${SERVER_URL}/post/${save ? 'unsavePost' : 'savePost'}?postId=${postId}`,
         {},
         {
           headers: {

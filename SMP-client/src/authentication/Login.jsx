@@ -144,7 +144,7 @@ const Login = ({toggle,setToggle,progress,setProgress}) => {
             >
               {isSubmitting ? 'Logging in...' : 'Login'}
             </Button>
-            <button className='text-cyan-600' onClick={()=>setToggle(!toggle)}>Login</button>
+            <button className='text-cyan-600' onClick={()=>setToggle(!toggle)}>Register</button>
           </Form>
         )}
       </Formik>

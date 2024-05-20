@@ -50,7 +50,7 @@
 
 // export default SideBar
 
-import * as React from 'react';
+import React, { useEffect, useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'; 
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar'; 
@@ -155,7 +155,7 @@ export default function SideBar() {
    
     setOpen(false);
   }; 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       setOpen(window.innerWidth > 1260);
     };
@@ -167,19 +167,20 @@ export default function SideBar() {
     };
   }, []);
 
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  React.useEffect(() => {
-      const handleResize = () => {
-          setWindowWidth(window.innerWidth);
-      };
+  useEffect(() => {
+    const handleResize = () => {
+        setOpen(window.innerWidth > 1260);
+    };
 
-      window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
 
-      return () => {
-          window.removeEventListener('resize', handleResize);
-      };
-  }, []);
+    return () => {
+        window.removeEventListener('resize', handleResize);
+    };
+}, []);
+
 
   const [value, setValue] = React.useState('recents');
 
@@ -206,8 +207,8 @@ export default function SideBar() {
       value="reel"
       icon={<ReelIcon />}
     /></Link>
-      <Link to='/home/message'>
-    <BottomNavigationAction label="Message" value="message" icon={<MessageIcon />} /></Link>
+      {/* <Link to='/home/message'>
+    <BottomNavigationAction label="Message" value="message" icon={<MessageIcon />} /></Link> */}
     <Link to='/home/profile'>
     <BottomNavigationAction label="Profile" value="profile" icon={<ProfileIcon />} /></Link>
   </BottomNavigation>):(
@@ -313,7 +314,7 @@ export default function SideBar() {
             </ListItemButton></Link>
           </ListItem>
  
-          <ListItem key="Messages" disablePadding sx={{ display: 'block' }}>
+          {/* <ListItem key="Messages" disablePadding sx={{ display: 'block' }}>
             <Link to="/home/message"><ListItemButton
               sx={{
                 minHeight: 48,
@@ -332,7 +333,7 @@ export default function SideBar() {
               </ListItemIcon>
               <ListItemText primary="Messages" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton></Link>
-          </ListItem> 
+          </ListItem>  */}
           <ListItem key="Profile" disablePadding sx={{ display: 'block' }}>
             <Link to="/home/profile"><ListItemButton
               sx={{
