@@ -1,4 +1,4 @@
-# Project Title: SMP
+# Project Title: Social Media Platform
 
 Java spring boot with React js (MUI ,Tailwind)
 
@@ -12,18 +12,18 @@ Java spring boot with React js (MUI ,Tailwind)
 
 ## Installation
 
-### Prerequisites
+### Prerequisites 
 
-- Java 11 or higher
-- Node.js and npm
-- Mongodb database
+- Java 17
+- Node.js and npm (frontend)
+- Mongodb Compass 
 
 ### Backend (Spring Boot)
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your/repository.git
+   [git clone https://github.com/your/repository.git](https://github.com/RAHUL50191/SMP/tree/main)
    ```
 
 2. Navigate to the backend directory:
@@ -37,13 +37,14 @@ Java spring boot with React js (MUI ,Tailwind)
    ```bash
    ./mvnw spring-boot:run
    ```
+   Or run on spring boot App
 
 ### Frontend (React.js with MUI and Tailwind CSS)
 
 1. Navigate to the frontend directory:
 
    ```bash
-   cd frontend
+   cd SMP-client
    ```
 
 2. Install dependencies:
@@ -91,10 +92,6 @@ Java spring boot with React js (MUI ,Tailwind)
 - Tailwind CSS
 - Redux (with React-Redux)
 - Axios (for API requests)
-
-## Usage
-
-Provide instructions on how to use your application. This may include details on authentication, API endpoints, UI navigation, etc.
 
 ## License
 
