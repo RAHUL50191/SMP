@@ -29,7 +29,7 @@ Java spring boot with React js (MUI ,Tailwind)
 2. Navigate to the backend directory:
 
    ```bash
-   cd backend
+   cd SMP-server
    ```
 
 3. Build and run the backend application:
