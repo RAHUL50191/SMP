@@ -16,7 +16,7 @@ Java spring boot with React js (MUI ,Tailwind)
 
 - Java 11 or higher
 - Node.js and npm
-- Mysql or mongodb database
+- Mongodb database
 
 ### Backend (Spring Boot)
 
