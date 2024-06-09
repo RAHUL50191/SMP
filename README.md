@@ -1,10 +1,6 @@
-# SMP
+# Project Title: SMP
 
 Java spring boot with React js (MUI ,Tailwind)
-
-# Project Title
-
-Brief description of the project.
 
 ## Table of Contents
 
@@ -20,7 +16,7 @@ Brief description of the project.
 
 - Java 11 or higher
 - Node.js and npm
-- PostgreSQL or any other preferred database
+- Mysql or mongodb database
 
 ### Backend (Spring Boot)
 
@@ -84,7 +80,7 @@ Brief description of the project.
 ### Backend
 
 - Java Spring Boot
-- PostgreSQL (or any preferred database)
+- MySQL 
 - Spring Security
 - JSON Web Tokens (JWT)
 
