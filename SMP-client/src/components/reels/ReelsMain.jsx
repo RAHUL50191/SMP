@@ -25,7 +25,7 @@ function ReelsMain() {
     fetchReels();
   }, []);
   return (
-    <div className='w-fit md:max-w-xl sm:max-w-xl max-w-sm  h-screen'>
+    <div className='w-fit md:max-w-xl sm:max-w-xl max-w-md  h-screen'>
       <Reels fetchReels={fetchReels} reels={reels}/>
     </div>
   )
